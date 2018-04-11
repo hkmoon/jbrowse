@@ -39,7 +39,7 @@ return declare(BigWig,
             return;
         }
 
-        v.readWigData( chrName, min, max, (features) => {
+        v.readWigData( chrName, min-100000, max+100000, (features) => {
             if(this.groupFeatures) {
                 var genes = {};
                 array.forEach( features || [], function(feature) {
@@ -52,15 +52,46 @@ return declare(BigWig,
                                 end: feature.get('end'),
                                 type: 'gene',
                                 name: feature.get('geneName'),
-                                id: feature.get('id'),
+                                id: feature.get('id')||feature.get('geneName'),
                                 subfeatures: []
                             }
                         });
+                    } else if(genes[id]) {
+                        if(feature.get('start') < genes[id].get('start')) {
+                            genes[id] = new SimpleFeature({
+                                id: genes[id].get('id'),
+                                data: {
+                                    start: feature.get('start'),
+                                    end: genes[id].get('end'),
+                                    type: 'gene',
+                                    name: genes[id].get('name'),
+                                    id: genes[id].get('id'),
+                                    subfeatures: genes[id].children()
+                                }
+                            });
+                        }
+                        if(feature.get('end') > genes[id].get('end')) {
+                            genes[id] = new SimpleFeature({
+                                id: genes[id].get('id'),
+                                data: {
+                                    start: genes[id].get('start'),
+                                    end: feature.get('end'),
+                                    type: 'gene',
+                                    name: genes[id].get('name'),
+                                    id: genes[id].get('id'),
+                                    subfeatures: genes[id].children()
+                                }
+                            });
+                        }
+                        genes[id].data.subfeatures.push(feature);
                     }
-                    genes[id].data.subfeatures.push(feature);
                 });
-                Object.keys(genes).forEach(function(name) {
-                    featureCallback(genes[name]);
+                v.readWigData( chrName, min, max, (features) => {
+                    array.forEach( features || [], function(feature) {
+                        if(genes[feature.get('geneId')]) {
+                            featureCallback(genes[feature.get('geneId')||feature.get('geneName')]);
+                        }
+                    });
                 });
             }
             else {
