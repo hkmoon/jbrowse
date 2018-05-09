@@ -12,7 +12,7 @@ JBrowse/main
 const format = 'AMD';
 
 function log(msg) {
-    console.log(`jbrowse-glob-loader: ${msg}`)
+    //console.log(`jbrowse-glob-loader: ${msg}`)
 }
 
 const JBrowseModuleIds =

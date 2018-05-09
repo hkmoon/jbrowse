@@ -40,7 +40,7 @@ module.exports = function(env) {
             },
             {
                 name: 'FileSaver',
-                location: env.dojoRoot + '/filesaver.js',
+                location: env.dojoRoot + '/file-saver',
                 lib: '.'
             }
         ]
