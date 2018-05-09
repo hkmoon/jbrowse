@@ -1,3 +1,6 @@
+import packagejson from './package.json';
+
+
 define( [
             'dojo/_base/declare',
             'dojo/_base/lang',
@@ -53,7 +56,6 @@ define( [
             'JBrowse/View/StandaloneDatasetList',
             'dijit/focus',
             '../lazyload.js', // for dynamic CSS loading
-            'dojo/text!./package.json',
 
 
             // extras for webpack
@@ -114,8 +116,7 @@ define( [
             HelpDialog,
             StandaloneDatasetList,
             dijitFocus,
-            LazyLoad,
-            packagejson
+            LazyLoad
         ) {
 
 
@@ -249,11 +250,7 @@ _initialLocation: function() {
     }
 },
 
-version: function() {
-    // when a build is put together, the build system assigns a string
-    // to the variable below.
-    return JSON.parse(packagejson).version;
-}.call(),
+version: packagejson.version,
 
 
 /**
@@ -1401,7 +1398,7 @@ browserMeta: function() {
             + '  <div class="tagline">A next-generation genome browser<br> built with JavaScript and HTML5.</div>'
             + '  <a class="mainsite" target="_blank" href="http://jbrowse.org">JBrowse website</a>'
             + '  <div class="gmod">JBrowse is a <a target="_blank" href="http://gmod.org">GMOD</a> project.</div>'
-            + '  <div class="copyright">'+JSON.parse(packagejson).copyright+'</div>'
+            + '  <div class="copyright">'+this.copyright+'</div>'
             + ((Object.keys(this.plugins).length>1&&!this.config.noPluginsForAboutBox) ? (
                 '  <div class="loaded-plugins">Loaded plugins<ul class="plugins-list">'
                 + array.map(Object.keys(this.plugins), function(elt) {

@@ -3,11 +3,10 @@ require('babel-polyfill')
 
 const DojoWebpackPlugin = require("dojo-webpack-plugin")
 const CopyWebpackPlugin = require("copy-webpack-plugin")
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CleanWebpackPlugin = require("clean-webpack-plugin");
 
 const path = require("path")
-const glob = require('glob')
+const glob = require("glob")
 const webpack = require("webpack")
 
 // if JBROWSE_BUILD_MIN env var is 1 or true, then we also minimize the JS
@@ -56,7 +55,7 @@ var webpackConf = {
         ),
 
         new webpack.NormalModuleReplacementPlugin(/^dojo\/text!/, function(data) {
-            data.request = data.request.replace(/^dojo\/text!/, "!!raw-loader!");
+            data.request = data.request.replace(/^dojo\/text!/, "!raw-loader!");
         }),
 
         new webpack.NormalModuleReplacementPlugin(
@@ -117,8 +116,6 @@ if (DEBUG) {
     webpackConf.devtool = 'source-map'
     webpackConf.entry.run_jasmine = 'tests/js_tests/main.js'
     webpackConf.plugins.push( new webpack.optimize.AggressiveMergingPlugin() )
-} else {
-    webpackConf.plugins.push( new UglifyJsPlugin({maxConcurrentCallsPerWorker: 1}))
 }
 
 module.exports = webpackConf
