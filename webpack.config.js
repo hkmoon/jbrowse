@@ -54,9 +54,6 @@ var webpackConf = {
             "dojox/gfx/canvas"
         ),
 
-        new webpack.NormalModuleReplacementPlugin(/^dojo\/text!/, function(data) {
-            data.request = data.request.replace(/^dojo\/text!/, "!raw-loader!");
-        }),
 
         new webpack.NormalModuleReplacementPlugin(
             /^css!/, function(data) {
