@@ -217,6 +217,7 @@ return declare('JBrowse.ConfigAdaptor.JB_json_v1',null,
                         /\.gff3?.gz$/i.test( urlTemplate )    ? 'JBrowse/Store/SeqFeature/GFF3Tabix'                                                :
                         /\.bed.gz$/i.test( urlTemplate )      ? 'JBrowse/Store/SeqFeature/BEDTabix'                                                 :
                         /\.(bw|bigwig)$/i.test( urlTemplate ) ? 'JBrowse/Store/SeqFeature/BigWig'                                                   :
+                        /\.(bb|bigbed)$/i.test( urlTemplate ) ? 'JBrowse/Store/SeqFeature/BigBed'                                                   :
                         /\.(fa|fasta)$/i.test( urlTemplate )  ? 'JBrowse/Store/Sequence/IndexedFasta'                                               :
                         /\.2bit$/i.test( urlTemplate )        ? 'JBrowse/Store/Sequence/TwoBit'                                                     :
                         /\/Sequence$/.test(trackConfig.type)  ? 'JBrowse/Store/Sequence/StaticChunked'                                              :
