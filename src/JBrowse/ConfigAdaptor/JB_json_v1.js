@@ -213,6 +213,8 @@ return declare('JBrowse.ConfigAdaptor.JB_json_v1',null,
                         /\/FixedImage/.test(trackConfig.type) ? 'JBrowse/Store/TiledImage/Fixed' +( trackConfig.backendVersion == 0 ? '_v0' : '' )  :
                         /\.jsonz?$/i.test( urlTemplate )      ? 'JBrowse/Store/SeqFeature/NCList'+( trackConfig.backendVersion == 0 ? '_v0' : '' )  :
                         /\.bam$/i.test( urlTemplate )         ? 'JBrowse/Store/SeqFeature/BAM'                                                      :
+                        /\.gff3?$/i.test( urlTemplate )       ? 'JBrowse/Store/SeqFeature/GFF3'                                                     :
+                        /\.bed$/i.test( urlTemplate )         ? 'JBrowse/Store/SeqFeature/BED'                                                     :
                         /\.vcf.gz$/i.test( urlTemplate )      ? 'JBrowse/Store/SeqFeature/VCFTabix'                                                 :
                         /\.gff3?.gz$/i.test( urlTemplate )    ? 'JBrowse/Store/SeqFeature/GFF3Tabix'                                                :
                         /\.bed.gz$/i.test( urlTemplate )      ? 'JBrowse/Store/SeqFeature/BEDTabix'                                                 :
@@ -239,11 +241,18 @@ return declare('JBrowse.ConfigAdaptor.JB_json_v1',null,
 
                 // if this is the first sequence store we see, and we
                 // have no refseqs store defined explicitly, make this the refseqs store.
-                if( (storeClass == 'JBrowse/Store/Sequence/StaticChunked' || storeClass == 'JBrowse/Store/Sequence/IndexedFasta' || storeClass == 'JBrowse/Store/Sequence/TwoBit' || trackConfig.useAsRefSeqStore) && !mainconf.stores['refseqs'] )
+                if( (storeClass == 'JBrowse/Store/Sequence/StaticChunked' ||
+                     storeClass == 'JBrowse/Store/Sequence/IndexedFasta' ||
+                     storeClass == 'JBrowse/Store/SeqFeature/IndexedFasta' ||
+                     storeClass == 'JBrowse/Store/SeqFeature/TwoBit' ||
+                     storeClass == 'JBrowse/Store/Sequence/TwoBit' ||
+                     trackConfig.useAsRefSeqStore
+                    ) && !mainconf.stores['refseqs'] )
+                {
                     storeConf.name = 'refseqs';
-                else
+                } else {
                     storeConf.name = 'store'+digest.objectFingerprint( storeConf );
-
+                }
                 // record it
                 mainconf.stores[storeConf.name] = storeConf;
 
