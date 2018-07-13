@@ -23,13 +23,12 @@ return declare([ FeatureGlyph, FeatureLabelMixin], {
     },
 
     _defaultConfig: function() {
-        return this._mergeConfigs(
+        var c =  this._mergeConfigs(
             this.inherited(arguments),
             {
                 style: {
                     maxDescriptionLength: 70,
 
-                    color: 'goldenrod',
                     mouseovercolor: 'rgba(0,0,0,0.3)',
                     borderColor: null,
                     borderWidth: 0.5,
@@ -47,6 +46,7 @@ return declare([ FeatureGlyph, FeatureLabelMixin], {
                     description: 'note, description'
                 }
             });
+        return c;
     },
 
     _getFeatureHeight: function( viewArgs, feature ) {

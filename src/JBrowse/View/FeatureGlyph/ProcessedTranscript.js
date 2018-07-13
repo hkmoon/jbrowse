@@ -27,7 +27,8 @@ _defaultConfig: function() {
                     return glyph._utrColor( glyph.getStyle( feature.parent(), 'color' ) ).toString();
                 },
 
-                utrHeightPercent: 65
+                utrHeightPercent: 65,
+                color: 'goldenrod'
             },
 
             subParts: 'CDS, UTR, five_prime_UTR, three_prime_UTR',
