@@ -17,32 +17,17 @@ define( [
 
 return declare( BAM, {
     _getFeatures: function( query, featCallback, endCallback, errorCallback ) {
-        var pc = this.pairCache = this.pairCache || {};
-        function pairAlignments(feature) {
-            var n = feature.get('name');
-            var b = feature.get('multi_segment_template')
-            if(b) {
-                if(!pc[n]) {
-                    pc[n] = new SimpleFeature({
-                        id: feature.get('id'),
-                        data: lang.mixin(feature, {
-                            subfeatures: [{ start: feature.get('start'), end: feature.get('end') }],
-                            start: feature.get('start'),
-                            end: feature.get('end')
-                        })
-                    })
-                } else {
-                    pc[n].data.subfeatures.push(new SimpleFeature({ start: feature.get('start'), end: feature.get('end') }));
-                    pc[n].data.start = Math.min(feature.get('start'), pc[n].get('start'));
-                    pc[n].data.end = Math.max(feature.get('end'), pc[n].get('end'));
-                    featCallback(pc[n]);
-                }
-            } else {
-                console.log('wtf1',feature);
-                featCallback(feature);
-            }
+        var pc = [];
+        function newFeatureCallback(feature) {
+            var next = feature.get('next_segment_position')
+            pc.push(next);
+            featCallback(feature);
         }
-        this.bam.fetch( query.ref ? query.ref : this.refSeq.name, query.start, query.end, pairAlignments, endCallback, errorCallback );
+        function redispatch(res) {
+            console.log(pc);
+            endCallback(res);
+        }
+        this.bam.fetch( query.ref ? query.ref : this.refSeq.name, query.start, query.end, newFeatureCallback, newEndCallback, errorCallback );
     }
 });
 });
