@@ -73,6 +73,7 @@ define( [
             'JBrowse/Store/DeferredStatsMixin',
             'JBrowse/Store/DeferredDelayedFeaturesMixin',
             'JBrowse/Store/SeqFeature/GlobalStatsEstimationMixin',
+            'JBrowse/Store/SeqFeature/_PairedReadAssociator',
             'JBrowse/Model/XHRBlob',
             'JBrowse/Model/SimpleFeature',
         ],
@@ -83,11 +84,15 @@ define( [
             DeferredStatsMixin,
             DeferredFeaturesMixin,
             GlobalStatsEstimationMixin,
+            PairedReadAssociator,
             XHRBlob,
             SimpleFeature,
         ) {
 
-return declare( [ SeqFeatureStore, DeferredStatsMixin, DeferredFeaturesMixin, GlobalStatsEstimationMixin ],
+
+
+
+return declare( [ SeqFeatureStore, DeferredStatsMixin, DeferredFeaturesMixin, GlobalStatsEstimationMixin, PairedReadAssociator ],
 
 /**
  * @lends JBrowse.Store.SeqFeature.CRAM
