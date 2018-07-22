@@ -13,6 +13,7 @@ define( [
             'JBrowse/Store/DeferredStatsMixin',
             'JBrowse/Store/DeferredFeaturesMixin',
             'JBrowse/Store/SeqFeature/GlobalStatsEstimationMixin',
+            'JBrowse/Store/SeqFeature/_PairedReadAssociator',
             'JBrowse/Model/XHRBlob',
             'JBrowse/Model/SimpleFeature',
         ],
@@ -23,6 +24,7 @@ define( [
             DeferredStatsMixin,
             DeferredFeaturesMixin,
             GlobalStatsEstimationMixin,
+            PairedReadAssociator,
             XHRBlob,
             SimpleFeature,
         ) {
@@ -72,7 +74,7 @@ class BlobWrapper {
 }
 
 
-return declare( [ SeqFeatureStore, DeferredStatsMixin, DeferredFeaturesMixin, GlobalStatsEstimationMixin ],
+return declare( [ SeqFeatureStore, DeferredStatsMixin, DeferredFeaturesMixin, GlobalStatsEstimationMixin, PairedReadAssociator ],
 
 /**
  * @lends JBrowse.Store.SeqFeature.CRAM
@@ -140,6 +142,7 @@ return declare( [ SeqFeatureStore, DeferredStatsMixin, DeferredFeaturesMixin, Gl
             })
 
         this.storeTimeout = args.storeTimeout || 3000;
+        this.viewAsPairs = args.viewAsPairs;
     },
 
     // process the parsed SAM header from the cram file

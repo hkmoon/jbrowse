@@ -10,6 +10,7 @@ define( [
             'JBrowse/Store/DeferredFeaturesMixin',
             'JBrowse/Model/XHRBlob',
             'JBrowse/Store/SeqFeature/GlobalStatsEstimationMixin',
+            'JBrowse/Store/SeqFeature/_PairedReadAssociator',
             './BAM/File'
         ],
         function(
@@ -24,10 +25,11 @@ define( [
             DeferredFeaturesMixin,
             XHRBlob,
             GlobalStatsEstimationMixin,
+            PairedReadAssociator,
             BAMFile
         ) {
 
-var BAMStore = declare( [ SeqFeatureStore, DeferredStatsMixin, DeferredFeaturesMixin, GlobalStatsEstimationMixin ],
+var BAMStore = declare( [ SeqFeatureStore, DeferredStatsMixin, DeferredFeaturesMixin, GlobalStatsEstimationMixin, PairedReadAssociator ],
 
 /**
  * @lends JBrowse.Store.SeqFeature.BAM
@@ -103,6 +105,7 @@ var BAMStore = declare( [ SeqFeatureStore, DeferredStatsMixin, DeferredFeaturesM
         });
 
         this.storeTimeout = args.storeTimeout || 3000;
+        this.viewAsPairs = args.viewAsPairs;
     },
 
     /**
