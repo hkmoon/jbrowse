@@ -156,6 +156,7 @@ log_echo -n "Formatting Volvox example data ...";
         docs/tutorial/data_files/volvox-sorted.bam.conf \
         docs/tutorial/data_files/volvox-sorted.bam.coverage.conf \
         docs/tutorial/data_files/volvox-paired.bam.conf \
+        docs/tutorial/data_files/volvox-paired-big.bam.conf \
         docs/tutorial/data_files/volvox.vcf.conf \
         docs/tutorial/data_files/volvox_fromconfig.conf \
         docs/tutorial/data_files/volvox.gff3.conf \
