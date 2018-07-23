@@ -18,7 +18,7 @@ return declare(null, {
         if(this.viewAsPairs) {
             var pc = {};
             var f = this.featCache = this.featCache || {};
-            function newFeatureCallback(feature) {
+            function initialPairing(feature) {
                 const [chr, pos] = feature.get('next_segment_position').split(':');
                 pc[chr] = pc[chr] || [];
                 pc[chr].push(pos);
@@ -41,48 +41,9 @@ return declare(null, {
                     f[n].end = Math.max(f[n].e1, f[n].e2);
                 }
             }
-            // async function newEndCallback(res) {
-            //     var bins = {};
 
-            //     // todo: follow next_segment_position around the genome
-            //     let arr = pc[query.ref || this.refSeq.name];
-            //     if(arr) {
-            //         arr.sort((a,b) => a-b);
-            //         for(var i = 0; i < arr.length; i++) {
-            //             var res = Math.round(arr[i] / 10000) * 10000;
-            //             bins[res] = (bins[res] || 0) + 1;
-            //         }
-            //     }
-            //     var promises = [];
-            //     var newfeats = [];
-            //     Object.keys(bins).forEach(region => {
-            //         var p = new Promise((resolve, reject) => {
-            //             this.getFeatures({ ref: query.ref, start: region, end: region+10000 }, finalPairing, resolve, reject);
-            //         });
-            //         promises.push(p);
-            //     });
-            //     await Promise.all(promises);
-
-            //     Object.keys(f).forEach(name => {
-            //         if(f[name].s2) {
-            //             featCallback(new SimpleFeature({
-            //                 id: name,
-            //                 data: {
-            //                     start: f[name].start,
-            //                     end: f[name].end,
-            //                     type: 'match',
-            //                     subfeatures: [
-            //                         { start: f[name].s1, end: f[name].e1, type: 'match_part' },
-            //                         { start: f[name].s2, end: f[name].e2, type: 'match_part' }
-            //                     ]
-            //                 }
-            //             }));
-            //         }
-            //     })
-            //     endCallback(res);
-            // }
             var supermethod = this.getInherited(arguments);
-            return this.inherited(arguments, [query, newFeatureCallback, async (res) => {
+            return this.inherited(arguments, [query, initialPairing, async (res) => {
                 var bins = {};
 
                 // todo: follow next_segment_position around the genome
@@ -95,13 +56,10 @@ return declare(null, {
                     }
                 }
                 var promises = [];
-                var newfeats = [];
-                console.log(bins);
-
                 Object.keys(bins).forEach(region => {
                     if(bins[region]>0) {
                         var p = new Promise((resolve, reject) => {
-                            supermethod({ ref: query.ref, start: +region, end: +region+10000 }, finalPairing, resolve, reject);
+                            supermethod.apply(this, [{ ref: query.ref, start: +region, end: +region+10000 }, finalPairing, resolve, reject]);
                         });
                         promises.push(p);
                     }
