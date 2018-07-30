@@ -34,6 +34,7 @@ return declare( null, {
      */
     getFeatures: function( query, featCallback, endCallback, errorCallback ) {
         this._deferred.features.then(() => {
+            console.log(query);
             if(!query.stats) {
                 this.accumulator = this.accumulator || [];
                 this.accumulator.push(query);
