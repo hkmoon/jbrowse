@@ -7,7 +7,7 @@ define( [
             'JBrowse/Util',
             'JBrowse/Store/SeqFeature',
             'JBrowse/Store/DeferredStatsMixin',
-            'JBrowse/Store/DeferredFeaturesMixin',
+            'JBrowse/Store/DeferredDelayedFeaturesMixin',
             'JBrowse/Model/XHRBlob',
             'JBrowse/Store/SeqFeature/GlobalStatsEstimationMixin',
             'JBrowse/Store/SeqFeature/_PairedReadAssociator',

@@ -11,7 +11,7 @@ define( [
             'JBrowse/Errors',
             'JBrowse/Store/SeqFeature',
             'JBrowse/Store/DeferredStatsMixin',
-            'JBrowse/Store/DeferredFeaturesMixin',
+            'JBrowse/Store/DeferredDelayedFeaturesMixin',
             'JBrowse/Store/SeqFeature/GlobalStatsEstimationMixin',
             'JBrowse/Store/SeqFeature/_PairedReadAssociator',
             'JBrowse/Model/XHRBlob',
