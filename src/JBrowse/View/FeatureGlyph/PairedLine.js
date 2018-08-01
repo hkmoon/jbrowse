@@ -20,7 +20,7 @@ function(
             }
             var s = fRect.f.get('start');
             var e = fRect.f.get('end');
-            var pos = parseInt(n.split(':')[1], 10);
+            var pos = +n.split(':')[1];
             var chrm = n.split(':')[0];
             var style = lang.hitch(this, 'getStyle');
 
@@ -40,7 +40,7 @@ function(
                    );
                 } else {
                     context.fillRect(
-                       fRect.rect.l - (s - pos) * fRect.viewInfo.scale,
+                       fRect.rect.l * fRect.viewInfo.scale,
                        Math.round(fRect.t + (fRect.rect.h - connectorThickness) / 2),
                        (s - pos - fRect.f.get('length')) * fRect.viewInfo.scale,
                        connectorThickness
@@ -50,11 +50,9 @@ function(
         },
 
         renderFeature: function(context, fRect) {
-            this.renderBox(context, fRect.viewInfo, fRect.f, fRect.t, fRect.rect.h, fRect.f);
             this.renderConnector(context, fRect);
+            this.renderBox(context, fRect.viewInfo, fRect.f, fRect.t, fRect.rect.h, fRect.f);
         }
-
-
     });
 });
 

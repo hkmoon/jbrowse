@@ -25,7 +25,9 @@ function (
                 glyph: 'JBrowse/View/FeatureGlyph/PairedLine',
                 heightScaler: 1,
                 style: {
-                    strandArrow: false
+                    strandArrow: false,
+                    connectorColor: 'black',
+                    connectorThickness: 1
                 }
             });
         },
@@ -71,7 +73,7 @@ function (
                     this._addRectToBitmap(rectangle, data);
                     this.rectangles[id] = rectangle;
 
-                    return rectangle.top;
+                    return rectangle.top*this.pitchY;
                 }
             });
         },

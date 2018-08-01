@@ -13,6 +13,7 @@ class CramSlightlyLazyFeature {
     _get_name() { return this.record.readName }
     _get_start() { return this.record.alignmentStart-1 }
     _get_end() { return this.record.alignmentStart+this.record.lengthOnRef-1 }
+    _get_length() { return this.record.lengthOnRef-1; }
     _get_cram_read_features() { return this.record.readFeatures }
     _get_type() { return 'match'}
     _get_mapping_quality() { return this.record.mappingQuality}
