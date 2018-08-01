@@ -33,22 +33,24 @@ return declare( null, {
      * and aggregate feature requests until the Deferred is resolved.
      */
     getFeatures: function( query, featCallback, endCallback, errorCallback ) {
-        this.browser.subscribe( '/jbrowse/v1/n/navigate', (c) => {
-            console.log('nav',c);
-            this.accumulator = []
-        })
+        // this.browser.subscribe( '/jbrowse/v1/n/navigate', (c) => {
+        //     console.log('nav',c);
+        //     this.accumulator = []
+        // })
         this._deferred.features.then(() => {
-            if(!query.stats) {
-                this.accumulator = this.accumulator || [];
-                this.accumulator.push(query);
-                setTimeout(() => {
-                    console.log(this.accumulator);
-                    var start = Math.min(...this.accumulator.map(o => o.start))
-                    var end = Math.max(...this.accumulator.map(o => o.end))
-                    console.log(start, end, query.ref);
-                    //this._getFeatures({ start: start, end: end, ref: query.ref }, (feat) => console.log, endCallback, errorCallback);
-                }, 50)
-            }
+            this._getFeatures(query, featCallback, endCallback, errorCallback);
+                //}, 50)
+            //if(!query.stats) {
+                //this.accumulator = this.accumulator || [];
+                //this.accumulator.push(query);
+                //setTimeout(() => {
+                //    console.log(this.accumulator);
+                //    var start = Math.min(...this.accumulator.map(o => o.start))
+                //    var end = Math.max(...this.accumulator.map(o => o.end))
+                //    console.log(start, end, query.ref);
+                //    //this._getFeatures({ start: start, end: end, ref: query.ref }, (feat) => console.log, endCallback, errorCallback);
+                //}, 50)
+            //}
         });
     }
 });
