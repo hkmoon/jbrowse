@@ -21,6 +21,7 @@ cache:
   - "$HOME/.nvm/"
   - "$HOME/geckodriver_$GECKODRIVER_VERSION"
   - travis_phantomjs
+  - "$HOME/.cache/electron"
 env:
     global:
         - GECKODRIVER_VERSION=0.19.1
