@@ -121,6 +121,52 @@ Then we can hand-edit this content into the tracks.conf again
     storeClass=JBrowse/Store/SeqFeature/GFF3Tabix \
     type=CanvasFeatures" >> data/tracks.conf
 
+## BAM file
+
+If you have been given sequenced alignments, you can also create a Alignments track that displays the alignments
+
+For volvox, we are given a file
+
+    wget http://jbrowse.org/code/latest-release/docs/tutorial/data_files/volvox-sorted.bam
+
+Note that this BAM file is already sorted. If your BAM is not sorted, it must be sorted to use in JBrowse. Next index this file
+
+    samtools index volvox-sorted.bam
+
+Then finally we can move these files into our data directory and create a track definition
+
+    mv volvox-sorted.bam data
+    mv volvox-sorted.bam.bai data
+    echo "[tracks.alignments] \
+    urlTemplate=volvox-sorted.bam
+    storeClass=JBrowse/Store/SeqFeature/BAM \
+    type=CanvasFeatures" >> data/tracks.conf
+
+Note that as of JBrowse 1.15.0, CRAM format is also supported!
+
+## Ready to go!
+
+At this point, if the jbrowse files are in your webserver, you should have a directory layout such as
+
+    /var/www/html/jbrowse
+    /var/www/html/jbrowse/data
+    /var/www/html/jbrowse/data/volvox.fa
+    /var/www/html/jbrowse/data/volvox.fa.fai
+    /var/www/html/jbrowse/data/volvox.sorted.gff3.gz
+    /var/www/html/jbrowse/data/volvox.sorted.gff3.gz.tbi
+    /var/www/html/jbrowse/data/tracks.conf
+
+Then you can visit http://localhost/jbrowse/
+
+This "data" folder will then automatically be loaded. If the folder was not called data, e.g. you had your files in /var/www/html/jbrowse/otherdata, then you can visit http://localhost/jbrowse/?data=otherdata
+
+This automatically lends a way to have "multiple data directories" also, as you can create multiple data directories for different species for example, and just navigate to them using the URL bar this way
+
+## Congratulations
+
+You have now setup JBrowse!
+
+If you have troubles, send an email to gmod-ajax@lists.sourceforge.net or create a GitHub issue (note that GitHub issues tend to be for pure concerns about JBrowse having bugs, so email list is preferre).
 
 ## Footnotes
 
