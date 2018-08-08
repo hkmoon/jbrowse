@@ -10,36 +10,17 @@ For JBrowse Desktop follow [this tutorial](jbrowse_desktop.html)
 
 # Pre-requisites
 
-## Operating system
+There are a couple of pre-requisites that help with getting JBrowse setup including
 
-We assume you are running "*nix-y" system such as Linux, MacOSX, Windows with the Linux Subsystem (WSL).
+- Operating system (should be unix-y. MacOSX, Linux, or Windows Subsystem for Linux have all been tested)
+- Samtools+Tabix (should have installed. Try `sudo apt install samtools` or `brew install brewsci/bio/samtools`)
+- Webserver (JBrowse is normally instaled on an existing webserver such as Apache, httpd, or nginx, but there are alternatives such as express.js too)
+- Command line skills. If you have never worked on the command line, some of these things will seem foreign. Knowing where files exist on your system, not strictly a command line skill, but for example your "public HTML" folder (normally /var/www/html or similar) will be useful
+- Sudo access (for some things like working with your webserver or installing samtools, this can be helpful. sudo is not strictly necessary for JBrowse though)
 
-## Samtools
+If you don't have all these things, consider using [JBrowse Desktop](jbrowse_desktop.html), as this does not require command line and is easy to use on all operating systems :)
 
-We also assume that you have samtools+htslib installed. Samtools is a popular package in the bioinformatics community that facilitates file format conversions. Newer JBrowse versions support many of these file formats so this quick-start guide assues you have installed samtools.
-
-For Ubuntu/Debian
-
-     sudo apt install samtools
-
-For Homebrew/Linyxbrew
-
-    brew install brewsci/bio/samtools
-
-Ideally we want to have samtools and tabix available.
-
-## Webserver
-
-We also assume that you have a webserver that you want to put JBrowse to use on. This includes something such as Apache, Nginx, but there are lots of types of webservers, microservices, static web hosts, etc. that can all serve JBrowse. JBrowse, after all, is just a static set of HTML, CSS, and JavaScript files that fetches static genomic data formats from the server, so it does not require and backend CGI, PHP, or anything like this
-
-## Minimal skills
-
-JBrowse should be easy to use, but having basic command line skills will help greatly for setting up JBrowse on the web. If you do not have command line skills, you can try [JBrowse Desktop](jbrowse_desktop.html). Note that having a familiarity with the layout of your filesystem helps too, e.g. where to put the files for your webserver. Many servers like Apache2 use /var/www/html for their "public HTML" folder so putting files here can immediately reflect on the website.
-
-## Sudo access
-
-Having sudo may be needed for your installation if you need to modify your public HTML folder (it is often protected). If you already have a subdirectory of the public HTML that you have access to, then you don't strictly need sudo then. The setup.sh script (detailed below) will not require sudo. Also note thatinstalling samtools via `apt get samtools` will also require sudo, but you could also compile samtools/htslib from source without sudo. Homebrew and Linuxbrew can be used to install samtools and they do not require sudo.
-
+Otherwise, continue on!
 
 # Download JBrowse
 
@@ -56,39 +37,40 @@ Now that we have it, we'll also need to download jbrowse
     ./setup.sh
 
 
-## FASTA file
+# Loading a FASTA file
 
- The FASTA file is provided for Volvox here to download http://jbrowse.org/code/latest-release/docs/tutorial/data_files/volvox.fa
+The Pres Tiguous University has supplied the FASTA file for Volvox here. We will retrieve it with wget
 
 
     wget http://jbrowse.org/code/latest-release/docs/tutorial/data_files/volvox.fa
 
-We are going to use samtools to create a "FASTA index". Indexing files allows even very large FASTA files to be downloaded into JBrowse "on demand" e.g. only downloading the sequence required for a certain view.
+We are going to use samtools to create a "FASTA index" using their faidx command. FASTA indexing allows even very large FASTA files to be downloaded into JBrowse "on demand" e.g. only downloading the sequence required for a certain view.
 
     samtools faidx volvox.fa
 
-This will generate a file called volvox.fa.fai
+The FASTA index will be a file called volvox.fa.fai
 
-Then we will use
+For this tutorial, we will handcreate a file called tracks.conf
 
-    bin/prepare-refseqs.pl --indexed_fasta volvox.fa
 
-This will generate a folder called "data" with a trackList.json containing the track entry for the volvox.fa reference sequence track
-
-Note that you could also hand edit this content in
 
     mkdir data
     mv volvox.fa data
     mv volvox.fa.fai data
-    echo "[tracks.refseq] \
-    urlTemplate=volvox.fa
-    storeClass=JBrowse/Store/SeqFeature/IndexedFasta \
-    type=Sequence \
+
+Then create the file data/tracks.conf with this file content
+
     [GENERAL]
-    refSeqs=volvox.fa.fai" >> data/tracks.conf
+    refSeqs=volvox.fa.fai
+    [tracks.refseq]
+    urlTemplate=volvox.fa
+    storeClass=JBrowse/Store/SeqFeature/IndexedFasta
+    type=Sequence
 
 
-This is an identical configuration to how the prepare-refseqs.pl works. In some sense, the prepare-refseqs is a nice one-liner, but becoming intimate with the configuration formats of JBrowse is helpful.
+
+
+Note that you could also create this configuration with bin/prepare-refseqs.pl --indexed_fasta volvox.fa but it is good to become intimate with the configuration format of JBrowse.
 
 ## GFF3 file
 
@@ -116,10 +98,15 @@ Then we can hand-edit this content into the tracks.conf again
 
     mv volvox.sorted.gff3.gz data
     mv volvox.sorted.gff3.gz.tbi data
-    echo "[tracks.genes] \
+
+
+Finally add this content into data/tracks.conf
+
+
+    [tracks.genes]
     urlTemplate=volvox.sorted.gff3.gz
-    storeClass=JBrowse/Store/SeqFeature/GFF3Tabix \
-    type=CanvasFeatures" >> data/tracks.conf
+    storeClass=JBrowse/Store/SeqFeature/GFF3Tabix
+    type=CanvasFeatures
 
 ## BAM file
 
@@ -137,12 +124,15 @@ Then finally we can move these files into our data directory and create a track 
 
     mv volvox-sorted.bam data
     mv volvox-sorted.bam.bai data
-    echo "[tracks.alignments] \
-    urlTemplate=volvox-sorted.bam
-    storeClass=JBrowse/Store/SeqFeature/BAM \
-    type=CanvasFeatures" >> data/tracks.conf
 
-Note that as of JBrowse 1.15.0, CRAM format is also supported!
+Finally add this content into data/tracks.conf
+
+    [tracks.alignments]
+    urlTemplate=volvox-sorted.bam
+    storeClass=JBrowse/Store/SeqFeature/BAM
+    type=Alignments2
+
+Note that as of JBrowse 1.15.0, CRAM format is also supported, simply switch .bam and .bam.bai with .cram and .cram.crai and use JBrowse/Store/SeqFeature/CRAM
 
 ## Ready to go!
 
@@ -154,14 +144,11 @@ At this point, if the jbrowse files are in your webserver, you should have a dir
     /var/www/html/jbrowse/data/volvox.fa.fai
     /var/www/html/jbrowse/data/volvox.sorted.gff3.gz
     /var/www/html/jbrowse/data/volvox.sorted.gff3.gz.tbi
+    /var/www/html/jbrowse/data/volvox-sorted.bam
+    /var/www/html/jbrowse/data/volvox-sorted.bam.bai
     /var/www/html/jbrowse/data/tracks.conf
 
-Then you can visit http://localhost/jbrowse/
-
-This "data" folder will then automatically be loaded. If the folder was not called data, e.g. you had your files in /var/www/html/jbrowse/otherdata, then you can visit http://localhost/jbrowse/?data=otherdata
-
-This automatically lends a way to have "multiple data directories" also, as you can create multiple data directories for different species for example, and just navigate to them using the URL bar this way
-
+Then you can visit http://localhost/jbrowse/ and the "data" directory will automatically be loaded.
 ## Congratulations
 
 You have now setup JBrowse!
@@ -171,6 +158,8 @@ If you have troubles, send an email to gmod-ajax@lists.sourceforge.net or create
 ## Footnotes
 
 a) If you want to customize JBrowse's javascript or use plugins, use JBrowse-1.15.1-dev.zip instead of JBrowse-1.15.1.zip (e.g. the -dev version). The -dev version will download extra javascript dependencies and can recompile JBrowse using webpack, but the non-dev version cannot.
+
+b) If the folder was not called data, e.g. you had your files in /var/www/html/jbrowse/otherdata, then you can visit http://localhost/jbrowse/?data=otherdata (this automatically lends a way to have "multiple data directories" since you could navigate to different ?data= URL paths this way. the "dataset selector" configuration contains more details)
 
 
 
