@@ -5,6 +5,11 @@
         "installation",
         "configuration_file_formats",
         "reference_sequence",
+        "loading_feature_data",
+        "canvas_features",
+        "html_features",
+        "alignments",
+        "bigwig",
         "plugins",
         "advanced_config",
         "screenshots"
