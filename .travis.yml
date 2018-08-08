@@ -26,8 +26,6 @@ env:
         - GECKODRIVER_VERSION=0.19.1
         - PHANTOMJS_VERSION=2.1.1
 before_install:
-  - openssl aes-256-cbc -K $encrypted_a33f2fb5219d_key -iv $encrypted_a33f2fb5219d_iv -in website/deploy.pem.enc -out deploy.pem -d
-  - chmod 600 deploy.pem
   - sudo dpkg --add-architecture i386
   - sudo apt-get -qq update
   - sudo apt-get install wine1.6
