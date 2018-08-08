@@ -10,13 +10,14 @@
         "html_features",
         "alignments",
         "bigwig",
-        "plugins",
         "advanced_config",
         "screenshots"
     ],
     "Tutorial": ["tutorial"],
     "JBrowse Desktop": ["jbrowse_desktop"],
     "FAQ": ["faq"],
-    "Developers": ["data_formats"]
+    "Developers": ["data_formats", "plugins"],
+    "Advanced server configs": ["server_settings"],
+    "Deprecated/Rarely used": ["image_tracks","feature_coverage"]
   }
 }

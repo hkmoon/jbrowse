@@ -1,6 +1,6 @@
 ---
 id: plugins
-title: Plugin guide
+title: Writing JBrowse Plugins
 ---
 
 ## Writing JBrowse Plugins
