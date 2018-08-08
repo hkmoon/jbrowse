@@ -53,3 +53,27 @@ This script is used to format sequence data for use by JBrowse, and must be run 
 
 `bin/prepare-refseqs.pl --fasta <fasta file> [options]`
 
+## Codon table
+
+The Sequence track added support for using a specified codon table or partial codon table, with start or stop codons highlighted
+
+|Option|Value|
+|------|-----|
+|`codonTable`|Specify a codon table or partial codon table. See <http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi>. Example "codonTable": { "AAA": "N" }. Available since 1.11.6|
+|`codonStarts`|Specify a set of start codons. See <http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi>. Example "codonStarts": [ "AAA" ]. Available since 1.12.0|
+|`codonStops`|Specify a set of stop codons. See <http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi>. Example "codonStops": [ "AAA" ]. Available since 1.12.0|
+
+Note that the colors of nucleotide bases rendered is controlled via CSS, so you can add custom CSS to a plugin or edit the jbrowse CSS to override it. The classes are
+
+`base_n,base_a,base_g,base_t,base_c`
+
+The amino acid track highlights can also be controlled via CSS. They can be either the letter "aminoAcid_m" for example or the "aminoAcid_start", "aminoAcid_stop" classes
+```
+.translatedSequence td.aminoAcid_start
+.translatedSequence td.aminoAcid_m
+.translatedSequence td.aminoAcid_k
+```
+
+## Other options
+
+|`useAsRefSeqStore`|Make a given track specifically identified as a refseq store, and JBrowse will then use the store class specified on your track to retrieve the data for the FASTA in "View details" popups, etc.|
