@@ -47,15 +47,13 @@ To begin, we'll pretend as though we are setting up the genome of Volvox mythicu
 
 Now that we have it, we'll also need to download jbrowse
 
-```
-wget https://github.com/GMOD/jbrowse/releases/download/1.15.1-release/JBrowse-1.15.1.zip
-unzip JBrowse-1.15.1.zip
-mv JBrowse-1.15.1 /var/www/html/jbrowse # might require sudo
-cd /var/www/html
-sudo chown `whoami` jbrowse
-cd jbrowse
-./setup.sh
-```
+    wget https://github.com/GMOD/jbrowse/releases/download/1.15.1-release/JBrowse-1.15.1.zip
+    unzip JBrowse-1.15.1.zip
+    mv JBrowse-1.15.1 /var/www/html/jbrowse # might require sudo
+    cd /var/www/html
+    sudo chown `whoami` jbrowse
+    cd jbrowse
+    ./setup.sh
 
 
 ## FASTA file
@@ -63,15 +61,11 @@ cd jbrowse
  The FASTA file is provided for Volvox here to download http://jbrowse.org/code/latest-release/docs/tutorial/data_files/volvox.fa
 
 
-```
-wget http://jbrowse.org/code/latest-release/docs/tutorial/data_files/volvox.fa
-```
+    wget http://jbrowse.org/code/latest-release/docs/tutorial/data_files/volvox.fa
 
 We are going to use samtools to create a "FASTA index". Indexing files allows even very large FASTA files to be downloaded into JBrowse "on demand" e.g. only downloading the sequence required for a certain view.
 
-```
-samtools faidx volvox.fa
-```
+    samtools faidx volvox.fa
 
 This will generate a file called volvox.fa.fai
 
@@ -83,28 +77,54 @@ This will generate a folder called "data" with a trackList.json containing the t
 
 Note that you could also hand edit this content in
 
-mkdir data
-mv volvox.fa data
-mv volvox.fa.fai data
-echo "[tracks.refseq] \
-urlTemplate=volvox.fa
-storeClass=JBrowse/Store/SeqFeature/IndexedFasta \
-type=Sequence \
-[GENERAL]
-refSeqs=volvox.fa.fai" >> data/tracks.conf
+    mkdir data
+    mv volvox.fa data
+    mv volvox.fa.fai data
+    echo "[tracks.refseq] \
+    urlTemplate=volvox.fa
+    storeClass=JBrowse/Store/SeqFeature/IndexedFasta \
+    type=Sequence \
+    [GENERAL]
+    refSeqs=volvox.fa.fai" >> data/tracks.conf
 
 
 This is an identical configuration to how the prepare-refseqs.pl works. In some sense, the prepare-refseqs is a nice one-liner, but becoming intimate with the configuration formats of JBrowse is helpful.
 
 ## GFF3 file
 
+We will use the newly generated "gene annotation" file that Pres Tiguous University generated for Volvox mythicus. First download it here
+
+    wget http://jbrowse.org/code/latest-release/docs/tutorial/data_files/volvox.gff3
+
+When we are processing GFF3 for usage in JBrowse, we can aim to use GFF3Tabix format. Tabix allows random access to genomic regions similar to Indexed FASTA. We must first sort the GFF to prepare it for tabx
+
+
+    sort -k1,1 -k4,4n volvox.gff3 > volvox.sorted.gff3
+
+Then run
+
+    bgzip volvox.sorted.gff3
+    tabix -p gff volvox.sorted.gff3.gz
+
+This generates the following files
+
+    volvox.sorted.gff3.gz
+    volvox.sorted.gff3.gz.tbi
+
+
+Then we can hand-edit this content into the tracks.conf again
+
+    mv volvox.sorted.gff3.gz data
+    mv volvox.sorted.gff3.gz.tbi data
+    echo "[tracks.genes] \
+    urlTemplate=volvox.sorted.gff3.gz
+    storeClass=JBrowse/Store/SeqFeature/GFF3Tabix \
+    type=CanvasFeatures" >> data/tracks.conf
+
 
 ## Footnotes
 
-a) check your jbrowse version. If it is JBrowse-1.15.1-dev.zip then it rebuilds the javascript by downloading packages with NPM and running webpack. If it is JBrowse 1.15.1.zip it does not require rebuilding the JS but then you can't really be expected to edit the Javascript. Note: if you want to edit the JavaScript or use extra JBrowse plugins, you must download JBrowse-1.15.1-dev.zip
+a) If you want to customize JBrowse's javascript or use plugins, use JBrowse-1.15.1-dev.zip instead of JBrowse-1.15.1.zip (e.g. the -dev version). The -dev version will download extra javascript dependencies and can recompile JBrowse using webpack, but the non-dev version cannot.
 
-b)  but overall it should be minimal and only require that perl is installed on your system
-
-Now, also move this directory into your webroot
 
 
