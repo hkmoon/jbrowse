@@ -1,7 +1,5 @@
 #!/bin/bash
-set -o verbose
-set -x
-set -v
+cd ${0%/*}
 yarn
 yarn build
 scp -i deploy.pem -o StrictHostKeyChecking=no -r build cdiesh@jbrowse.org:~/
