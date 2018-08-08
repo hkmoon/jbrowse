@@ -27,8 +27,12 @@ before_install:
 - sudo apt-get install wine1.6
 install:
 - phantomjs --version
-- wget -O - https://github.com/mozilla/geckodriver/releases/download/v$GECKODRIVER_VERSION/geckodriver-v$GECKODRIVER_VERSION-linux64.tar.gz
-  | tar -xzf - -C ~/geckodriver_$GECKODRIVER_VERSION;
+-- |
+-  if [[ ! -f ~/geckodriver_$GECKODRIVER_VERSION/geckodriver ]]; then
+-    rm -rf ~/geckodriver_$GECKODRIVER_VERSION;
+-    mkdir ~/geckodriver_$GECKODRIVER_VERSION;
+-    wget -O - https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v$GECKODRIVER_VERSION-linux64.tar.gz | tar -xzf - -C ~/geckodriver_$GECKODRIVER_VERSION;
+-  fi
 - export PATH=$PATH:$HOME/geckodriver_$GECKODRIVER_VERSION
 - cpanm --notest GD::Image Text::Markdown DateTime JSON
 - if [[ ! -f ~/python/bin/activate ]]; then virtualenv ~/python; fi
