@@ -77,6 +77,14 @@ script:
     MOZ_HEADLESS=1 SELENIUM_BROWSER=firefox NOSEOPTS="-I jasmine" JBROWSE_URL=http://localhost:9000/JBrowse-$RELEASE_VERSION/index.html tests/selenium_tests/travis_wrapper.sh;
   fi
 - set +e
+- tlmgr install psnfss
+- tlmgr install cmap
+- tlmgr install fncychap
+- tlmgr install fancyhdr
+- tlmgr install titlesec
+- tlmgr install tabulary
+- tlmgr install varwidth
+- tlmgr install wrapfig float parskip capt-of needspace carlisle courier helvetic
 - sphinx-build -b latex docs/site/ outdir
 - cd outdir && pdflatex jbrowse.tex && cd -
 after_failure:

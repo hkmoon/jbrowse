@@ -80,7 +80,7 @@ Now your directory structure is something like
     /var/www/jbrowse/data/volvox.fa
     /var/www/jbrowse/data/volvox.fa.fai
 
-At this point, you should be able to open up http://localhost/jbrowse/?data=data (or just simply http://localhost/jbrowse/) and you will see your genome with the reference sequence track. If you have any problems at this stage, send an email to gmod-ajax@lists.sourceforge.net with details about your setup for troubleshooting, or file a GitHub issue.
+At this point, you should be able to open up http://localhost/jbrowse/ and you will see your genome with the reference sequence track. If you have any problems at this stage, send an email to gmod-ajax@lists.sourceforge.net with details about your setup for troubleshooting, or file a GitHub issue.
 
 
 ## GFF3 file
