@@ -8,27 +8,36 @@ This tutorial will walk you through setting up JBrowse on your webserver
 For JBrowse Desktop follow [this tutorial](jbrowse_desktop.html)
 
 
-# Pre-requisites
+# What do I need to install JBrowse
 
 There are a couple of pre-requisites that help with getting JBrowse setup including
 
-- Operating system (should be unix-y. MacOSX, Linux, or Windows Subsystem for Linux have all been tested)
-- Samtools+Tabix (should have installed. Try `sudo apt install samtools` or `brew install brewsci/bio/samtools`)
-- Webserver (JBrowse is normally instaled on an existing webserver such as Apache, httpd, or nginx, but there are alternatives such as express.js too)
-- Command line skills. If you have never worked on the command line, some of these things will seem foreign. Knowing where files exist on your system, not strictly a command line skill, but for example your "public HTML" folder (normally /var/www/html or similar) will be useful
-- Sudo access (for some things like working with your webserver or installing samtools, this can be helpful. sudo is not strictly necessary for JBrowse though)
+- Unix-y operating system - JBrowse setup is best on MacOSX, Linux, or Windows Subsystem for Linux
+- Webserver - Apache or nginx are the most common servers for JBrowse
+- Command line skills - Familiarity with the command line will help you follow this tutorial
+- Sudo access - sudo is not strictly necessary unless you need it to modify webserver files e.g. in /var/www
 
 If you don't have all these things, consider using [JBrowse Desktop](jbrowse_desktop.html), as this does not require command line and is easy to use on all operating systems :)
 
 Otherwise, continue on!
 
+# Install system pre-requisites
+
+Some system pre-requisites for a Ubuntu/WSL/Debian type system
+
+    sudo apt install build-essential zlib1g-dev
+
+On CentOS/RedHat
+
+    sudo yum groupinstall "Development Tools"
+    sudo yum install zlib-devel perl-ExtUtils-MakeMaker
+
 # Download JBrowse
 
-To begin, we'll pretend as though we are setting up the genome of Volvox mythicus. The Volvox genome was sequenced by Pres Tiguous University in 2018 and they'd like to setup JBrowse now.
 
 Now that we have it, we'll also need to download jbrowse
 
-    wget https://github.com/GMOD/jbrowse/releases/download/1.15.1-release/JBrowse-1.15.1.zip
+    curl -O https://github.com/GMOD/jbrowse/releases/download/1.15.1-release/JBrowse-1.15.1.zip
     unzip JBrowse-1.15.1.zip
     mv JBrowse-1.15.1 /var/www/html/jbrowse # might require sudo
     cd /var/www/html
@@ -39,24 +48,18 @@ Now that we have it, we'll also need to download jbrowse
 
 # Loading a FASTA file
 
-The Pres Tiguous University has supplied the FASTA file for Volvox here. We will retrieve it with wget
-
-
-    wget http://jbrowse.org/code/latest-release/docs/tutorial/data_files/volvox.fa
-
-We are going to use samtools to create a "FASTA index" using their faidx command. FASTA indexing allows even very large FASTA files to be downloaded into JBrowse "on demand" e.g. only downloading the sequence required for a certain view.
-
-    samtools faidx volvox.fa
-
-The FASTA index will be a file called volvox.fa.fai
-
-For this tutorial, we will handcreate a file called tracks.conf
-
+To begin, we'll pretend as though we are setting up the genome of *Volvox mythicus*, a mythical species in the genus [Volvox](https://en.wikipedia.org/wiki/Volvox). The Volvox genome was sequenced by Prestigious State University in 2018 and they'd like to setup JBrowse now. They give us a link to their FASTA file that we'll download
 
 
     mkdir data
-    mv volvox.fa data
-    mv volvox.fa.fai data
+    curl http://jbrowse.org/code/latest-release/docs/tutorial/data_files/volvox.fa > data/volvox.fa
+
+We are going to use samtools to create a "FASTA index" using their faidx command. FASTA indexing allows even very large FASTA files to be downloaded into JBrowse "on demand" e.g. only downloading the sequence required for a certain view.
+
+    samtools faidx data/volvox.fa
+
+The FASTA index will be a file called volvox.fa.fai. Then we'll move these files into a "data directory" that JBrowse can use
+
 
 Then create the file data/tracks.conf with this file content
 
@@ -69,12 +72,20 @@ Then create the file data/tracks.conf with this file content
 
 
 
+Now your directory structure is something like
 
-Note that you could also create this configuration with bin/prepare-refseqs.pl --indexed_fasta volvox.fa but it is good to become intimate with the configuration format of JBrowse.
+    /var/www/jbrowse
+    /var/www/jbrowse/data
+    /var/www/jbrowse/data/tracks.conf
+    /var/www/jbrowse/data/volvox.fa
+    /var/www/jbrowse/data/volvox.fa.fai
+
+At this point, you should be able to open up http://localhost/jbrowse/?data=data (or just simply http://localhost/jbrowse/) and you will see your genome with the reference sequence track. If you have any problems at this stage, send an email to gmod-ajax@lists.sourceforge.net with details about your setup for troubleshooting, or file a GitHub issue.
+
 
 ## GFF3 file
 
-We will use the newly generated "gene annotation" file that Pres Tiguous University generated for Volvox mythicus. First download it here
+We will use the newly generated "gene annotation" file that Prestigious University generated for Volvox mythicus. First download it here
 
     wget http://jbrowse.org/code/latest-release/docs/tutorial/data_files/volvox.gff3
 
@@ -163,3 +174,4 @@ b) If the folder was not called data, e.g. you had your files in /var/www/html/j
 
 
 
+ If you have never worked on the command line, some of these things will seem foreign. Knowing where files exist on your system, not strictly a command line skill, but for example your "public HTML" folder (normally /var/www/html or similar) will be useful
